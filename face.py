@@ -14,6 +14,8 @@ from keras.layers import Conv2D, MaxPooling2D
 from keras.preprocessing.image import ImageDataGenerator
 from keras.optimizers import RMSprop, SGD, Adam
 from keras.callbacks import ModelCheckpoint, EarlyStopping, ReduceLROnPlateau
+from keras.models import load_model
+
 import matplotlib.pyplot as plt
 import sklearn
 from sklearn.metrics import classification_report, confusion_matrix
@@ -199,3 +201,21 @@ plt.colorbar()
 tick_marks = np.arange(len(classes))
 _ = plt.xticks(tick_marks, classes, rotation=90)
 _ = plt.yticks(tick_marks, classes)
+
+
+
+
+classifier = load_model('emotion_little_vgg.h5')
+
+validation_generator = validation_datagen.flow_from_directory(
+        validation_data_dir,
+        color_mode = 'grayscale',
+        target_size=(img_rows, img_cols),
+        batch_size=batch_size,
+        class_mode='categorical',
+        shuffle=False)
+
+class_labels = validation_generator.class_indices
+class_labels = {v: k for k, v in class_labels.items()}
+classes = list(class_labels.values())
+print(class_labels)
